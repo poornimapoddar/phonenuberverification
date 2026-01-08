@@ -1,5 +1,5 @@
 (function () {
-    const WIDGET_URL = 'http://localhost:3000/embed/phone-verify'; // Change this to production URL
+    const WIDGET_URL = 'https://phonenuberverification.vercel.app/embed/phone-verify'; // Production URL
 
     function initPhoneVerifyWidget() {
         const container = document.getElementById('phone-verify-widget');
