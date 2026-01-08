@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin >
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+    <title>Phone Verification</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 90vh;
+            background-color: #f3f4f6;
+            font-family: "Poppins", sans-serif;
+        }
+
+        h2 {
+            margin-top: 0;
+        }
+
+        #signup-form, #otp-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .otp-box {
+            background-color: white;
+            padding: 2.5em;
+            border-radius: 20px;
+            max-width: 350px;
+        }
+        
+        form input {
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 20px;
+        }
+
+        .otp-input {
+            width: 100%;
+            text-align: center;
+            font-size: 24px;
+        }
+
+        button {
+            background: #1f1f1f;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 18px;
+            padding: 15px;
+            border: none;
+            transition: 0.2s;
+        }
+
+        button:hover {
+            background: black;
+            color: white;
+        }
+
+        .error-message {
+            color: red;
+            margin-top: -10px;
+            font-size: 16px;
+        }
+        
+        #otp-inputs {
+            display: flex;
+            gap: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="otp-box">
+        <div id="numbersection">
+            <h2>Please Confirm Your Phone Number</h2>
+            <form id="signup-form">
+                <label for="phone">Phone Number:</label>
+                <input type="tel" id="phone" name="phone" required readonly>
+                <button type="button" onclick="sendOTP()">Send OTP</button>
+                <p class="error-message" id="number-error"></p>
+            </form>
+        </div>
+
+        <div id="otp-section" style="display:none;">
+            <h2>Enter One Time Verification Code</h2>
+            <form id="otp-form">
+                <label for="otp">Enter the 6 digit verification code sent to the phone number:</label>
+                <div id="otp-inputs">
+                    <input type="text" id="otp1" class="otp-input" maxlength="1" required>
+                    <input type="text" id="otp2" class="otp-input" maxlength="1" required>
+                    <input type="text" id="otp3" class="otp-input" maxlength="1" required>
+                    <input type="text" id="otp4" class="otp-input" maxlength="1" required>
+                    <input type="text" id="otp5" class="otp-input" maxlength="1" required>
+                    <input type="text" id="otp6" class="otp-input" maxlength="1" required>
+                </div>
+                <button type="button" onclick="verifyOTP()">Verify OTP</button>
+                <p class="error-message" id="otp-error"></p>
+            </form>
+        </div>
+    </div>
+
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>
+    <script src="otp.js"></script>
+    <script>
+    
+$(document).ready(function() { 
+    
+    let host_name = "https://" + window.location.hostname + "/";
+    if( sessionStorage.getItem("zapierPostData") == "" ||
+    sessionStorage.getItem("zapierPostData") == null ||
+    sessionStorage.getItem("nextPageURL") == "" || 
+    sessionStorage.getItem("phoneNumber") == ""  )
+    {
+       document.location.href = host_name + "/quote/" 
+    }
+ 
+    
+    let phonenumner = sessionStorage.getItem("phoneNumber"); 
+    
+     $("#phone").val(phonenumner);
+ 
+    
+
+    $('.otp-input').on('input', function() {
+        let $this = $(this);
+        if ($this.val().length == 1) {
+            $this.next('.otp-input').focus();
+        }
+    });
+
+    $('.otp-input').on('keydown', function(e) {
+        let $this = $(this);
+        if (e.key === 'Backspace' && $this.val().length === 0) {
+            $this.prev('.otp-input').focus();
+        }
+    });
+
+    $('.otp-input').on('paste', function(e) {
+        e.preventDefault();
+        let pasteData = e.originalEvent.clipboardData.getData('text').split('');
+        let $inputs = $('.otp-input');
+        $inputs.each(function(index, input) {
+            $(input).val(pasteData[index] || '');
+        });
+        $inputs.last().focus();
+    });
+});
+
+
+
+    </script>
+</body>
+</html>
